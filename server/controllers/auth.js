@@ -8,16 +8,24 @@ const registerUser = async (req, res) => {
         
         const isUsed = await User.findOne({ email });
         if (isUsed) {
-            return res.status(402).json({ msg: `Username - ${isUsed.username} already exist` })
+            return res.json({ message: `User already exists with this email` });
         }
 
         const salt = bcrypt.genSaltSync(10);
         const hashpassword = bcrypt.hashSync(password, salt);
 
-        const createUser = await User.create({username: username, password:hashpassword, email:email});
-        res.json(createUser);
+        const createUser = await User.create({ username: username, password: hashpassword, email: email });
+        const token = jwt.sign(
+            {
+                id: createUser._id,
+            },
+            process.env.JWT_SECRET,
+            { expiresIn: "1d" }
+        );
+
+        res.json({ message:`User ${createUser.username} was registered`,createUser, token });
     } catch (error) {
-        throw new error(error);
+        res.json({ message: `Error during registration` });
     }
 }
 
@@ -27,29 +35,29 @@ const loginUser = async (req, res) => {
         const user = await User.findOne({ email });
        
         if (!user) {
-            return res.json({msg:`User ${user.email} does not exist`})
+            return res.json({ message: `User ${user.email} does not exist` });
         }
 
         const isPasswordCorrect = await bcrypt.compare(password, user.password)
         if (!isPasswordCorrect) {
-        return res.json({msg:'Password not correct'})
+        return res.json({ message: "Password not correct" });
         }
 
         const token = jwt.sign({
             id: user._id,
         }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
-        res.json({ token, user });
+        res.json({message:`User ${user.username} was logged in`, token, user });
     } catch (error) {
-    throw new error(error);
-  }
+        res.json({ message: `Error during logging` });
+    }
 };
 
 const getMe = async (req, res) => {
     try {
         const user = await User.findById(req.userId);
         if (!user) {
-            return res.json({msg:`User does not exist`})
+            return res.json({ message: `User does not exist` });
         }
 
         const token = jwt.sign(
@@ -59,9 +67,9 @@ const getMe = async (req, res) => {
            process.env.JWT_SECRET,
            { expiresIn: "1d" }
         )
-        res.json({token,user})
+        res.json({ message: `User authorized`,token, user });
   } catch (error) {
-    throw new error(error);
+     res.json({ message: `Error during authorization` });
   }
 };
 
