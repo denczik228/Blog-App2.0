@@ -1,6 +1,7 @@
 import React from 'react'
 import { AiFillEye, AiOutlineMessage } from 'react-icons/ai'
 import Moment from "react-moment";
+import { Link } from 'react-router-dom';
 
 export const Postitem = ({ post }) => {
     if (!post) {
@@ -12,7 +13,8 @@ export const Postitem = ({ post }) => {
     }
 
   return (
-    <div className="flex flex-col basis-1/4 flex-grow">
+    <Link to={`/${post._id}`}>
+     <div className="flex flex-col basis-1/4 flex-grow">
       <div className={post.imgUrl ? "flex rounded-sm h-80" : "flex rounded-sm"}>
         {post.imgUrl && (
           <img
@@ -41,6 +43,8 @@ export const Postitem = ({ post }) => {
           <span>{post.comments?.length ||0}</span>
         </button>
       </div>
-    </div>
+    </div> 
+    </Link>
+    
   );
 }

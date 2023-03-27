@@ -1,8 +1,6 @@
 const Post = require("../models/Post");
 const User = require("../models/User");
 const path = require('path');
-const { dirname } = require('path');
-const { fileURLToPath } = require ("url");
 
 const createPosts = async (req, res) => {
     try {
@@ -15,11 +13,8 @@ const createPosts = async (req, res) => {
 
           // If no image submitted, exit
           if (!image) return res.sendStatus(400);
-          let fileName = req.files.image.name;
           
-          // Move the uploaded image to our upload folder
-          //image.mv(__dirname + "/uploads/" + image.name);
-          // const __dirname = dirname(fileURLToPath())
+          let fileName = req.files.image.name;
           req.files.image.mv(path.join(__dirname,'..','uploads', fileName))
 
           const newPostWithImage = new Post({
@@ -27,7 +22,7 @@ const createPosts = async (req, res) => {
             title,
             text,
             imgUrl:fileName,
-            author: req.userId,
+            author:req.userId,
           });
 
           await newPostWithImage.save();
@@ -69,4 +64,15 @@ const getAll = async (req, res) => {
   }
 }
 
-module.exports = { createPosts, getAll };
+const getById = async (req, res) => {
+  try {
+    const post = await Post.findByIdAndUpdate(req.params.id, {
+      $inc:{views:1}
+    })
+    res.json(post)
+  } catch (error) {
+    throw new error(`Problem with get post by id function`)
+  }
+}
+
+module.exports = { createPosts, getAll, getById};
