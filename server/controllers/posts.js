@@ -71,8 +71,21 @@ const getById = async (req, res) => {
     })
     res.json(post)
   } catch (error) {
-    throw new error(`Problem with get post by id function`)
+    throw new error(`Problem with getting post by id function`)
   }
 }
 
-module.exports = { createPosts, getAll, getById};
+const getMyPosts = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+    const list = await Promise.all(
+      user.posts.map((post) => { return Post.findById(post._id) })
+    )
+    res.json(list)
+  } catch (error) {
+    throw new error(`Problem with getting my post`)
+  }
+
+}
+
+module.exports = { createPosts, getAll, getById, getMyPosts};
