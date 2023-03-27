@@ -28,32 +28,52 @@ export const getAllposts = createAsyncThunk('post/getAllPosts',
 }
 )
 
+export const deletePosts = createAsyncThunk('post/deletePosts', async (id) => {
+  try {
+    const { data } = await axios.delete(`/posts/${id}`, id)
+    return data
+  } catch (error) {
+    throw new error(`Problem with fetching data of deleting posts`)
+  }
+})
+
 export const postSlice = createSlice({
   name: "post",
   initialState,
   reducers: {},
   extraReducers: {
     [createPost.pending]: (state) => {
-      state.loading = true
+      state.loading = true;
     },
     [createPost.fulfilled]: (state, action) => {
-      state.loading = false
-      state.posts.push(action.payload)
+      state.loading = false;
+      state.posts.push(action.payload);
     },
     [createPost.rejected]: (state) => {
-      state.loading = false
+      state.loading = false;
     },
-//for all posts
+    //for all posts
     [getAllposts.pending]: (state) => {
-      state.loading = true
+      state.loading = true;
     },
     [getAllposts.fulfilled]: (state, action) => {
-      state.loading = false
-        state.posts = action.payload.posts
-        state.popularPosts = action.payload.popularPosts
+      state.loading = false;
+      state.posts = action.payload.posts;
+      state.popularPosts = action.payload.popularPosts;
     },
     [getAllposts.rejected]: (state) => {
-      state.loading = false
+      state.loading = false;
+    },
+    //deleting of post
+    [deletePosts.pending]: (state) => {
+      state.loading = true;
+    },
+    [deletePosts.fulfilled]: (state, action) => {
+      state.loading = false;
+      state.posts = state.posts.filter((post)=>post._id !== action.payload._id)
+    },
+    [deletePosts.rejected]: (state) => {
+      state.loading = false;
     },
   },
 });

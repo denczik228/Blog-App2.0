@@ -85,7 +85,21 @@ const getMyPosts = async (req, res) => {
   } catch (error) {
     throw new error(`Problem with getting my post`)
   }
-
 }
 
-module.exports = { createPosts, getAll, getById, getMyPosts};
+const deletePost = async (req, res) => {
+  try {
+    const post = await Post.findByIdAndDelete(req.params.id);
+    if(!post) return res.json({message: `Post doesn't exist`})
+    
+    await User.findByIdAndUpdate(req.userId, {
+      $pull:{posts:req.params.id},
+    })
+
+    res.json({message:`Post was deleted`});
+  } catch (error) {
+    throw new error(`Proble with deleting of post`)
+  }
+}
+
+module.exports = { createPosts, getAll, getById, getMyPosts, deletePost};
