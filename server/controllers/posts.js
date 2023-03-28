@@ -102,4 +102,30 @@ const deletePost = async (req, res) => {
   }
 }
 
-module.exports = { createPosts, getAll, getById, getMyPosts, deletePost};
+const updatePosts = async (req, res) => {
+  try {
+    const { title, text, id } = req.body
+    const post = await Post.findById(id);
+    
+    if (req.files) {
+      // Get the file that was set to our field named "image"
+      const { image } = req.files;
+
+      // If no image submitted, exit
+      if (!image) return res.sendStatus(400);
+          
+      let fileName = req.files.image.name;
+      req.files.image.mv(path.join(__dirname, '..', 'uploads', fileName))
+      post.imgUrl = fileName || ''
+    }
+    post.title = title
+    post.text = text
+    
+    await post.save()
+    res.json(post);
+  } catch (error) {
+    throw new error({message:`problem with updating of post`})
+  }
+}
+
+module.exports = { createPosts, getAll, getById, getMyPosts, deletePost, updatePosts};

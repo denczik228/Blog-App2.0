@@ -8,9 +8,10 @@ import { deletePosts } from '../redux/features/post/postSlice';
 import { toast } from 'react-toastify'
 
 export const PostPage = () => {
-
+ 
   const { user } = useSelector((state) => state.auth)
   const navigate = useNavigate();
+  
   const [post, setPost] = useState('');
   const params = useParams();
   const dispatch = useDispatch();
@@ -81,17 +82,20 @@ export const PostPage = () => {
             </div>
 
             {user?._id === post.author && (
-            <div className="flex gap-3 mt-4">
-              <button className="flex items-center justify-center gap-2 text-white opacity-50">
-                <AiTwotoneEdit />
-              </button>
+              <div className="flex gap-3 mt-4">
+                <button className="flex items-center justify-center gap-2 text-white opacity-50">
+                  <Link to={`/${params.id}/edit`}>
+                    <AiTwotoneEdit />
+                  </Link>
+                </button>
                 <button
                   onClick={removeHandler}
-                  className="flex items-center justify-center gap-2 text-white opacity-50">
+                  className="flex items-center justify-center gap-2 text-white opacity-50"
+                >
                   <AiFillDelete />
                 </button>
-            </div>
-              )}
+              </div>
+            )}
           </div>
         </div>
         <div className="w-1/3">Comments</div>

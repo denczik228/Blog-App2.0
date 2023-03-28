@@ -9,7 +9,7 @@ import { getAllposts } from '../redux/features/post/postSlice';
 export const MainPage = () => {
 
   const dispatch = useDispatch();
-  const {posts, popularPosts} = useSelector((state)=>state.post)
+  const { posts, popularposts } = useSelector((state) => state.post);
   
   useEffect(() => {
     dispatch(getAllposts());
@@ -26,15 +26,17 @@ export const MainPage = () => {
     <div className="max-w-[900px] mx-auto py-10">
       <div className="flex justify-between gap-8">
         <div className="flex flex-col gap-10 basis-4/5">
-          {posts?.map((post, index) => <Postitem key={index} post={post}/>)}
+          {posts?.map((post, index) => (
+            <Postitem key={index} post={post} />
+          ))}
         </div>
         <div className="basis-1/5">
-          <div className="text-xs uppercase text-white">POPULAR</div>
-          {
-            popularPosts?.map((post, index) => <PopularPosts key={index} post={post} />)
-          }
+          <div className="text-xs uppercase text-white">Popular Posts:</div>
+            {popularposts?.map((post, index) => (
+              <PopularPosts key={index} post={post} />
+            ))}
+          </div>
         </div>
-      </div>
     </div>
   );
 }
