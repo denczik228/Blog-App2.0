@@ -1,4 +1,5 @@
 const Post = require("../models/Post");
+const Comment = require("../models/Comment");
 const User = require("../models/User");
 const path = require('path');
 
@@ -128,4 +129,26 @@ const updatePosts = async (req, res) => {
   }
 }
 
-module.exports = { createPosts, getAll, getById, getMyPosts, deletePost, updatePosts};
+const getPostComments = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id)
+    const list = await Promise.all(
+      post.comments.map((comment) => {
+        return Comment.findById(comment)
+      })
+    )
+    res.json(list)
+  } catch (error) {
+     throw new error({ message: `problem with getting comments of post` });
+  }
+}
+
+module.exports = {
+  createPosts,
+  getAll,
+  getById,
+  getMyPosts,
+  deletePost,
+  updatePosts,
+  getPostComments,
+};

@@ -4,6 +4,7 @@ const dotenv = require('dotenv').config();
 const cors = require('cors');
 const authRouter = require('./routes/auth');
 const postsRouter = require('./routes/posts');
+const commentsRouter = require('./routes/comment');
 const fileUpload = require('express-fileupload');
 
 const app = express();
@@ -18,7 +19,7 @@ app.use(express.static('uploads'));
 // });
 app.use('/api/auth', authRouter);
 app.use('/api/posts', postsRouter);
-
+app.use('/api/comments', commentsRouter)
 
 async function start() {
     try {
