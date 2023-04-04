@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require("mongoose");
 const dotenv = require('dotenv').config();
+const bodyParser = require("body-parser");
 const cors = require('cors');
 const authRouter = require('./routes/auth');
 const postsRouter = require('./routes/posts');
@@ -12,6 +13,8 @@ app.use(cors());
 app.use(express.json());
 app.use(fileUpload());
 app.use(express.static('uploads'));
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
 
 
 // app.get('/', (req, res) => {

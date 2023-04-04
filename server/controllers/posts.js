@@ -143,6 +143,24 @@ const getPostComments = async (req, res) => {
   }
 }
 
+const deleteComments = async (req, res) => {
+    const postId = req.params.postId;
+    const commentId = req.params.commentId;
+    console.log(postId, commentId);
+  try {
+    const comment = await Comment.findByIdAndDelete({ _id: commentId });
+
+    const post = await Post.findByIdAndUpdate({ _id: postId }, {
+      $pull: { comments: commentId },
+    });
+
+    res.status(200).json({ message: "Comment has been deleted", comment, post });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+}
+
 module.exports = {
   createPosts,
   getAll,
@@ -151,4 +169,5 @@ module.exports = {
   deletePost,
   updatePosts,
   getPostComments,
+  deleteComments,
 };

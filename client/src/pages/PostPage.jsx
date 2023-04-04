@@ -10,6 +10,7 @@ import { toast } from 'react-toastify'
 import { CommentItem } from '../components/CommentItem';
 
 export const PostPage = () => {
+  
  const {comments}=useSelector((state)=>state.comment)
   const { user } = useSelector((state) => state.auth)
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ export const PostPage = () => {
 
   const handleSubmit = () => {
     try {
-      const postId=params.id
+      const postId = params.id
       dispatch(createComment({ postId, comment }))
       setComment('')
     } catch (error) {
@@ -74,14 +75,16 @@ export const PostPage = () => {
           <div className="flex flex-col basis-1/4 flex-grow">
             <div
               className={
-                post?.imgUrl ? "flex rounded-sm h-80" : "flex rounded-sm"
+                post?.imgUrl
+                  ? "flex rounded-sm h-80 justify-center"
+                  : "flex rounded-sm"
               }
             >
               {post?.imgUrl && (
                 <img
                   src={`http://localhost:3001/${post.imgUrl}`}
                   alt="img"
-                  className="object-cover w-full"
+                  className="object-cover w-2/3"
                 />
               )}
             </div>
@@ -103,8 +106,7 @@ export const PostPage = () => {
                 <span>{post.views}</span>
               </button>
               <button className="flex items-center justify-center gap-2 text-xs text-white opacity-50">
-                <AiOutlineMessage />{' '}
-                <span>{post.comments?.length || 0}</span>
+                <AiOutlineMessage /> <span>{post.comments?.length || 0}</span>
               </button>
             </div>
 
@@ -126,22 +128,31 @@ export const PostPage = () => {
           </div>
         </div>
         <div className="w-1/3 p-8 bg-gray-700 flex flex-col gap-2 rounded-sm">
-          
-          <form className='flex gap-2' onSubmit={e=>e.preventDefault()}>
-            <input type='text' value={comment} onChange={e => setComment(e.target.value)} placeholder="Comment" className="text-black w-full rounded-sm bg-gray-400 border p-2 text-xs outline-none placeholder:text-gray-700"/>
-            <button type='submit'
+          <form className="flex gap-2" onSubmit={(e) => e.preventDefault()}>
+            <input
+              type="text"
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              placeholder="Comment"
+              className="text-black w-full rounded-sm bg-gray-400 border p-2 text-xs outline-none placeholder:text-gray-700"
+            />
+            <button
+              type="submit"
               onClick={handleSubmit}
-              className="flex justify-center items-center bg-gray-600 text-xs rounded-sm py-2 px-4">
-                Send
+              className="flex justify-center items-center bg-gray-600 text-xs rounded-sm py-2 px-4"
+            >
+              Send
             </button>
           </form>
-          {
-            comments?.map((cmt) => (
-              <CommentItem key={cmt._id} cmt={cmt}/>
-            ))
-          }
+          {comments?.map((cmt) => (
+            <CommentItem
+              key={cmt._id}
+              cmt={cmt}
+              postId={post._id}
+            />
+          ))}
         </div>
       </div>
     </div>
-  )
+  );
 }

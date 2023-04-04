@@ -12,8 +12,8 @@ const createComment = async (req, res) => {
         
         try {
             await Post.findByIdAndUpdate(postId, {
-            $push:{comments:newComment._id}
-        })    
+                $push: { comments: newComment._id }
+            })
         } catch (error) {
             console.log(error);
         }
@@ -21,6 +21,8 @@ const createComment = async (req, res) => {
     } catch (error) {
         throw new error(`problem with creation of comment`)
     }
-}
+};
 
-module.exports = createComment
+
+
+module.exports = { createComment }

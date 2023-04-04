@@ -15,21 +15,39 @@ export const createComment = createAsyncThunk('comment/createComment',
             })
             return data
         } catch (error) {
-            console.log(error)
+          console.log(error)
+          throw error;
         }
     }
 );
 
-export const getPostComments = createAsyncThunk('comment/getPostComments',
-    async (postId) => {
+export const removeComment = createAsyncThunk(
+  "comment/removeComment",
+  async (args, thunkAPI) => {
+    const { postId, commentId } = args;
     try {
-        const { data } = await axios.get(`/posts/comments/${postId}`)
-        return data
+      const { data } = await axios.delete(
+        `/posts/${postId}/comments/${commentId}`
+      );
+      return data;
     } catch (error) {
-        console.log(error)
+      console.log(error);
+      throw error;
     }
-}
-)
+  }
+);
+
+export const getPostComments = createAsyncThunk('comment/getPostComments',
+  async (postId) => {
+    try {
+      const { data } = await axios.get(`/posts/comments/${postId}`)
+      return data
+    } catch (error) {
+      console.log(error)
+      throw error;
+    }
+  }
+);
 
 export const commentSlice = createSlice({
   name: "comment",
@@ -52,9 +70,20 @@ export const commentSlice = createSlice({
     },
     [getPostComments.fulfilled]: (state, action) => {
       state.loading = false;
-      state.comments = action.payload
+      state.comments = action.payload;
     },
     [getPostComments.rejected]: (state) => {
+      state.loading = false;
+    },
+    //deleting comment
+    [removeComment.pending]: (state) => {
+      state.loading = true;
+    },
+    [removeComment.fulfilled]: (state, action) => {
+      state.loading = false;
+      state.comments = state.comments.filter((comment) => comment._id !== action.payload._id);
+    },
+    [removeComment.rejected]: (state) => {
       state.loading = false;
     },
   },
