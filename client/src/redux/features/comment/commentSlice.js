@@ -23,13 +23,10 @@ export const createComment = createAsyncThunk('comment/createComment',
 
 export const removeComment = createAsyncThunk(
   "comment/removeComment",
-  async (args, thunkAPI) => {
-    const { postId, commentId } = args;
+  async ({ postId, commentId }, { dispatch }) => {
     try {
-      const { data } = await axios.delete(
-        `/posts/${postId}/comments/${commentId}`
-      );
-      return data;
+      await axios.delete(`/posts/${postId}/comments/${commentId}`);
+      dispatch(delComment({ postId, commentId }));
     } catch (error) {
       console.log(error);
       throw error;
@@ -52,7 +49,13 @@ export const getPostComments = createAsyncThunk('comment/getPostComments',
 export const commentSlice = createSlice({
   name: "comment",
   initialState,
-  reducers: {},
+  reducers: {
+    delComment: (state, action) => {
+      state.comments = state.comments.filter(
+        (comment) => comment._id !== action.payload.commentId
+      );
+    },
+  },
   extraReducers: {
     [createComment.pending]: (state) => {
       state.loading = true;
@@ -75,18 +78,8 @@ export const commentSlice = createSlice({
     [getPostComments.rejected]: (state) => {
       state.loading = false;
     },
-    //deleting comment
-    [removeComment.pending]: (state) => {
-      state.loading = true;
-    },
-    [removeComment.fulfilled]: (state, action) => {
-      state.loading = false;
-      state.comments = state.comments.filter((comment) => comment._id !== action.payload._id);
-    },
-    [removeComment.rejected]: (state) => {
-      state.loading = false;
-    },
   },
 });
 
+export const { delComment } = commentSlice.actions;
 export default commentSlice.reducer

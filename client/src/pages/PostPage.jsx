@@ -15,6 +15,7 @@ export const PostPage = () => {
   const { user } = useSelector((state) => state.auth)
   const navigate = useNavigate();
   
+  console.log({ comments })
   const [post, setPost] = useState('');
   const [comment, setComment] = useState('');
 

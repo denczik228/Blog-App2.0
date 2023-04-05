@@ -131,35 +131,39 @@ const updatePosts = async (req, res) => {
 
 const getPostComments = async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id)
-    const list = await Promise.all(
-      post.comments.map((comment) => {
-        return Comment.findById(comment)
-      })
-    )
-    res.json(list)
+    const post = await Post.findById(req.params.id).populate("comments");
+    const comments = await Comment.find({
+      _id: { $in: post.comments },
+    }).populate("author");
+    res.json(comments);
   } catch (error) {
-     throw new error({ message: `problem with getting comments of post` });
+    throw new Error({ message: `Problem with getting comments of post` });
   }
-}
+};
 
 const deleteComments = async (req, res) => {
-    const postId = req.params.postId;
-    const commentId = req.params.commentId;
-    console.log(postId, commentId);
+  const postId = req.params.postId;
+  const commentId = req.params.commentId;
+
   try {
-    const comment = await Comment.findByIdAndDelete({ _id: commentId });
+    const comment = await Comment.findByIdAndDelete(commentId).populate(
+      "author"
+    );
 
-    const post = await Post.findByIdAndUpdate({ _id: postId }, {
-      $pull: { comments: commentId },
-    });
+    const post = await Post.findByIdAndUpdate(
+      postId,
+      { $pull: { comments: commentId } },
+      { new: true }
+    ).populate("author");
 
-    res.status(200).json({ message: "Comment has been deleted", comment, post });
+    res
+      .status(200)
+      .json({ message: "Comment has been deleted", comment, post });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Server error" });
   }
-}
+};
 
 module.exports = {
   createPosts,
