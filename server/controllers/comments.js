@@ -9,7 +9,7 @@ const createComment = async (req, res) => {
 
     const newComment = new Comment({
       comment,
-      author: req.userId, // предполагается, что вы используете аутентификацию и имеете информацию об авторе в объекте запроса (req.user._id)
+      author: req.userId,
     });
     await newComment.save();
 
