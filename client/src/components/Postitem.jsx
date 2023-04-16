@@ -17,11 +17,13 @@ export const Postitem = ({ post }) => {
     <Link to={`/${post._id}`}>
       <div className="flex flex-col basis-1/4 flex-grow">
         <div
-          className={post.imgUrl ? "flex rounded-sm h-80" : "flex rounded-sm"}
+          className={
+            post.imgUrl.data ? "flex rounded-sm h-80" : "flex rounded-sm"
+          }
         >
-          {post.imgUrl && (
+          {post.imgUrl.data && (
             <img
-              src={`http://localhost:3001/${post.imgUrl}`}
+              src={`proces.env.REACT_APP_SERVER_IMG_URL+${post.imgUrl.data}`}
               alt="img"
               className="object-cover w-full"
             />

@@ -76,14 +76,14 @@ export const PostPage = () => {
           <div className="flex flex-col basis-1/4 flex-grow">
             <div
               className={
-                post?.imgUrl
+                post?.imgUrl.data
                   ? "flex rounded-sm h-80 justify-center"
                   : "flex rounded-sm"
               }
             >
-              {post?.imgUrl && (
+              {post?.imgUrl.data && (
                 <img
-                  src={`http://localhost:3001/${post.imgUrl}`}
+                  src={`process.env.REACT_APP_SERVER_IMG_URL+${post.imgUrl}`}
                   alt="img"
                   className="object-cover w-2/3"
                 />
@@ -146,11 +146,7 @@ export const PostPage = () => {
             </button>
           </form>
           {comments?.map((cmt) => (
-            <CommentItem
-              key={cmt._id}
-              cmt={cmt}
-              postId={post._id}
-            />
+            <CommentItem key={cmt._id} cmt={cmt} postId={post._id} />
           ))}
         </div>
       </div>
