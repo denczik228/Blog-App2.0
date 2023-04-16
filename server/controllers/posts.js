@@ -7,24 +7,24 @@ const createPosts = async (req, res) => {
   const { title, text } = req.body;
   const user = await User.findById(req.userId);
 
-try {
-      const newPostWithOutImage = new Post({
-        username: user.username,
-        title,
-        text,
-        author: req.userId,
-      });
+  try {
+    const newPostWithOutImage = new Post({
+      username: user.username,
+      title,
+      text,
+      author: req.userId,
+    });
       
-      await newPostWithOutImage.save();
-      await User.findByIdAndUpdate(req.userId, {
-        $push: { posts: newPostWithOutImage },
-      });
+    await newPostWithOutImage.save();
+    await User.findByIdAndUpdate(req.userId, {
+      $push: { posts: newPostWithOutImage },
+    });
       
-      res.json(newPostWithOutImage);
-    } catch (error) {
-      res.json({ message: `Problem with creation of post` });
-    }
-}
+    res.json(newPostWithOutImage);
+  } catch (error) {
+    res.json({ message: `Problem with creation of post` });
+  }
+};
 
 
 const getAll = async (req, res) => {

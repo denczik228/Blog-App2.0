@@ -6,13 +6,11 @@ const cors = require('cors');
 const authRouter = require('./routes/auth');
 const postsRouter = require('./routes/posts');
 const commentsRouter = require('./routes/comment');
-const fileUpload = require('express-fileupload');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(fileUpload());
-app.use(express.static('uploads'));
+
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
 
