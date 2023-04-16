@@ -7,8 +7,7 @@ const createPosts = async (req, res) => {
   const { title, text } = req.body;
   const user = await User.findById(req.userId);
 
-  if (req.files) {
-    try {
+try {
       const newPostWithOutImage = new Post({
         username: user.username,
         title,
@@ -25,8 +24,8 @@ const createPosts = async (req, res) => {
     } catch (error) {
       res.json({ message: `Problem with creation of post` });
     }
-  }
 }
+
 
 const getAll = async (req, res) => {
   try {
