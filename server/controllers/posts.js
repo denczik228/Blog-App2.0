@@ -4,53 +4,57 @@ const User = require("../models/User");
 const path = require('path');
 
 const createPosts = async (req, res) => {
-    try {
-        const { title, text } = req.body
-        const user = await User.findById(req.userId);
-        
-        if (req.files) {
-          // Get the file that was set to our field named "image"
-          const { image } = req.files;
+  try {
+    const { title, text } = req.body;
+    const user = await User.findById(req.userId);
 
-          // If no image submitted, exit
-          if (!image) return res.sendStatus(400);
-          
-          let fileName = req.files.image.name;
-          req.files.image.mv(path.join(__dirname,'..','uploads', fileName))
+    if (req.files) {
+      // Get the file that was set to our field named "image"
+      const { image } = req.files;
 
-          const newPostWithImage = new Post({
-            username: user.username,
-            title,
-            text,
-            imgUrl:fileName,
-            author:req.userId,
-          });
+      // If no image submitted, exit
+      if (!image) return res.sendStatus(400);
 
-          await newPostWithImage.save();
-          await User.findByIdAndUpdate(req.userId, {
-            $push: { posts: newPostWithImage },
-          });
-          return res.json(newPostWithImage);
-        }
+      // Read the image file into a buffer
+      const imageBuffer = image.data;
 
-        const newPostWithOutImage = new Post(
-            {
-                username: user.username,
-                title,
-                text,
-                imgUrl: '',
-                author:req.userId,
-            }
-        )
-        await newPostWithOutImage.save()
-        await User.findByIdAndUpdate(req.userId, {
-            $push:{posts:newPostWithOutImage},
-        })
-        res.json(newPostWithOutImage);
-    } catch (error) {
-        res.json({message: `Problem with creation of post`});
+      // Create a new buffer to store the image data in base64 format
+      const base64Image = imageBuffer.toString("base64");
+
+      const newPostWithImage = new Post({
+        username: user.username,
+        title,
+        text,
+        imgUrl: {
+          data: base64Image,
+          contentType: image.mimetype,
+        },
+        author: req.userId,
+      });
+
+      await newPostWithImage.save();
+      await User.findByIdAndUpdate(req.userId, {
+        $push: { posts: newPostWithImage },
+      });
+      return res.json(newPostWithImage);
     }
-}
+
+    const newPostWithOutImage = new Post({
+      username: user.username,
+      title,
+      text,
+      imgUrl: "",
+      author: req.userId,
+    });
+    await newPostWithOutImage.save();
+    await User.findByIdAndUpdate(req.userId, {
+      $push: { posts: newPostWithOutImage },
+    });
+    res.json(newPostWithOutImage);
+  } catch (error) {
+    res.json({ message: `Problem with creation of post` });
+  }
+};
 
 const getAll = async (req, res) => {
   try {
@@ -105,29 +109,38 @@ const deletePost = async (req, res) => {
 
 const updatePosts = async (req, res) => {
   try {
-    const { title, text, id } = req.body
+    const { title, text, id } = req.body;
     const post = await Post.findById(id);
-    
+
     if (req.files) {
       // Get the file that was set to our field named "image"
       const { image } = req.files;
 
       // If no image submitted, exit
       if (!image) return res.sendStatus(400);
-          
-      let fileName = req.files.image.name;
-      req.files.image.mv(path.join(__dirname, '..', 'uploads', fileName))
-      post.imgUrl = fileName || ''
+
+      // Read the image file into a buffer
+      const imageBuffer = image.data;
+
+      // Create a new buffer to store the image data in base64 format
+      const base64Image = imageBuffer.toString("base64");
+
+      post.imgUrl = {
+        data: base64Image,
+        contentType: image.mimetype,
+      };
     }
-    post.title = title
-    post.text = text
-    
-    await post.save()
+
+    post.title = title;
+    post.text = text;
+
+    await post.save();
     res.json(post);
   } catch (error) {
-    throw new error({message:`problem with updating of post`})
+    res.json({ message: `Problem with updating of post` });
   }
-}
+};
+
 
 const getPostComments = async (req, res) => {
   try {
