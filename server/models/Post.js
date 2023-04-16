@@ -14,10 +14,6 @@ var PostSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    imgUrl: {
-      data: Buffer, 
-      contentType: String,
-    },
     views: {
       type: Number,
       default: 0,

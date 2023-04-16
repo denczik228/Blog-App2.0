@@ -15,7 +15,7 @@ export const PostPage = () => {
   const { user } = useSelector((state) => state.auth)
   const navigate = useNavigate();
   
-  console.log({ comments })
+  //console.log({ comments })
   const [post, setPost] = useState('');
   const [comment, setComment] = useState('');
 
@@ -73,24 +73,6 @@ export const PostPage = () => {
 
       <div className="flex gap-10 py-8">
         <div className="w-2/3">
-          <div className="flex flex-col basis-1/4 flex-grow">
-            <div
-              className={
-                post?.imgUrl
-                  ? "flex rounded-sm h-80 justify-center"
-                  : "flex rounded-sm"
-              }
-            >
-              {post?.imgUrl && (
-                <img
-                  src={process.env.REACT_APP_SERVER_IMG_URL+post.imgUrl}
-                  alt="img"
-                  className="object-cover w-2/3"
-                />
-              )}
-            </div>
-          </div>
-
           <div className="flex justify-between items-center pt-2">
             <div className="text-xs text-white opacity-50">{post.username}</div>
             <div className="text-xs text-white opacity-50">

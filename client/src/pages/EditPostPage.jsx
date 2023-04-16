@@ -7,8 +7,7 @@ import { updatePost } from '../redux/features/post/postSlice';
 export const EditPostPage = () => {
   const [title, setTitle] = useState('');
   const [text, setText] = useState('');
-  const [oldImage, setOldImage] = useState('');
-  const [newImage,setNewImage]=useState('')
+  
   const params = useParams();
 
   const dispatch = useDispatch();
@@ -18,8 +17,6 @@ export const EditPostPage = () => {
     const { data } = await axios.get(`/posts/${params.id}`)
     setTitle(data.title)
     setText(data.text)
-    setOldImage(data.imgUrl)
-
   }, [params.id])
 
   const submitHandler = () => { 
@@ -28,7 +25,6 @@ export const EditPostPage = () => {
       updatedPost.append('title', title)
       updatedPost.append('text', text)
       updatedPost.append('id', params.id)
-      updatedPost.append('image', newImage)
       dispatch(updatePost(updatedPost))
       navigate('/posts')
     } catch (error) {
@@ -46,32 +42,6 @@ export const EditPostPage = () => {
   
    return (
      <form className="w-1/3 mx-auto py-10" onSubmit={(e) => e.preventDefault()}>
-       <label className="text-gray-300 py-2 bg-gray-600 text-xs mt-2 flex items-center justify-center border-2 border-dotted cursor-pointer">
-         Please, Attach the image:
-         <input
-           type="file"
-           className="hidden"
-           onChange={(e) => {
-             setNewImage(e.target.files[0]);
-             setOldImage("");
-           }}
-         />
-       </label>
-       <div className="flex object-cover py-2">
-         {oldImage && (
-           <img
-             src={process.env.REACT_APP_SERVER_IMG_URL + oldImage}
-             alt={oldImage.name}
-           />
-         )}
-         ,
-         {newImage && (
-           <img
-             src={process.env.REACT_APP_SERVER_IMG_URL + newImage}
-             alt={newImage.name}
-           />
-         )}
-       </div>
 
        <label className="text-xs text-white opacity-70">
          Post title:
