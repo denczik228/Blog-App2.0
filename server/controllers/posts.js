@@ -4,11 +4,11 @@ const User = require("../models/User");
 
 
 const createPosts = async (req, res) => {
+  try{
   const { title, text } = req.body;
   const user = await User.findById(req.userId);
 
-  try {
-    const newPostWithOutImage = new Post({
+  const newPostWithOutImage = new Post({
       username: user.username,
       title,
       text,
