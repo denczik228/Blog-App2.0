@@ -41,7 +41,14 @@ export const AddPostPage = () => {
           onChange={(e) => setImage(e.target.files[0])}
         />
       </label>
-      <div className="flex object-cover py-2">{image && <img src={URL.createObjectURL(image)} alt={image.name} />}</div>
+      <div className="flex object-cover py-2">
+        {image && (
+          <img
+            src={process.env.REACT_APP_SERVER_IMG_URL + image.name}
+            alt={image.name}
+          />
+        )}
+      </div>
 
       <label className="text-xs text-white opacity-70">
         Post title:
@@ -64,10 +71,16 @@ export const AddPostPage = () => {
         />
       </label>
       <div className="flex gap-8 items-center justify-center mt-4">
-        <button onClick={submitHandler} className="flex justify-center items-center bg-gray-600 text-xs text-white rounded-sm py-2 px-4">
+        <button
+          onClick={submitHandler}
+          className="flex justify-center items-center bg-gray-600 text-xs text-white rounded-sm py-2 px-4"
+        >
           Add post
         </button>
-        <button onClick={cleanHandler} className="flex justify-center items-center bg-red-600 text-xs text-white rounded-sm py-2 px-4">
+        <button
+          onClick={cleanHandler}
+          className="flex justify-center items-center bg-red-600 text-xs text-white rounded-sm py-2 px-4"
+        >
           Undo changes
         </button>
       </div>

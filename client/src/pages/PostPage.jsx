@@ -76,14 +76,14 @@ export const PostPage = () => {
           <div className="flex flex-col basis-1/4 flex-grow">
             <div
               className={
-                post?.imgUrl.data
+                post?.imgUrl
                   ? "flex rounded-sm h-80 justify-center"
                   : "flex rounded-sm"
               }
             >
-              {post?.imgUrl.data && (
+              {post?.imgUrl && (
                 <img
-                  src={`process.env.REACT_APP_SERVER_IMG_URL+${post.imgUrl}`}
+                  src={process.env.REACT_APP_SERVER_IMG_URL+post.imgUrl}
                   alt="img"
                   className="object-cover w-2/3"
                 />

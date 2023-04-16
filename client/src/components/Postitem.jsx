@@ -18,12 +18,12 @@ export const Postitem = ({ post }) => {
       <div className="flex flex-col basis-1/4 flex-grow">
         <div
           className={
-            post.imgUrl.data ? "flex rounded-sm h-80" : "flex rounded-sm"
+            post.imgUrl ? "flex rounded-sm h-80" : "flex rounded-sm"
           }
         >
-          {post.imgUrl.data && (
+          {post.imgUrl && (
             <img
-              src={`proces.env.REACT_APP_SERVER_IMG_URL+${post.imgUrl.data}`}
+              src={proces.env.REACT_APP_SERVER_IMG_URL+post.imgUrl}
               alt="img"
               className="object-cover w-full"
             />
