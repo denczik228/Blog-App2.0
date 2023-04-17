@@ -7,20 +7,20 @@ import { createPost } from '../redux/features/post/postSlice';
 export const AddPostPage = () => {
   const [title, setTitle] = useState('');
   const [text, setText] = useState('');
-
+  
   const dispatch = useDispatch();
 
   const submitHandler = () => {
-  try {
-    const data = new FormData()
-    data.append('title', title)
-    data.append('text', text)
-    dispatch(createPost(data))
-    navigate('/')
-  } catch (error) {
+    try {
+      const data = new FormData()
+      data.append('title', title)
+      data.append('text', text)
+      dispatch(createPost({ title, text}))
+      navigate('/')
+    } catch (error) {
       throw new error(`problem with submitHandler func`)
-  }
-  }
+    }
+  };
 
   const navigate = useNavigate();
   

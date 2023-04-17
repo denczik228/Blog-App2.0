@@ -9,8 +9,8 @@ export const CommentItem = ({ postId, cmt }) => {
   const commentId = cmt._id;
   const isCommentAuthor = cmt.author._id === user?._id;
 
-  console.log(cmt)
-  console.log(postId, commentId);
+  // console.log(cmt)
+  // console.log(postId, commentId);
 
   const avatar = user?.username.trim().toUpperCase().split("").slice(0, 2);
  

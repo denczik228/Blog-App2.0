@@ -4,27 +4,31 @@ const User = require("../models/User");
 
 
 const createPosts = async (req, res) => {
-  try{
-  const { title, text } = req.body;
-  const user = await User.findById(req.userId);
+  try {
+    const { title, text } = req.body;
+    if (!title || !text) {
+      return res.status(400).json({ message: "Title and text are required" });
+    }
 
-  const newPostWithOutImage = await Post.create({
+    const user = await User.findById(req.userId);
+
+    const newPostWithoutImage = new Post({
       username: user.username,
       title,
       text,
       author: req.userId,
     });
-      
-   const userPosts = await User.findByIdAndUpdate(req.userId, {
-      $push: { posts: newPostWithOutImage },
+
+    await newPostWithoutImage.save();
+    await User.findByIdAndUpdate(req.userId, {
+      $push: { posts: newPostWithoutImage },
     });
-      
-    res.json({ newPostWithOutImage, userPosts });
+
+    res.json(newPostWithoutImage);
   } catch (error) {
-    res.json({ message: `Problem with creation of post` });
+    res.status(500).json({ message: "Problem with creation of post" });
   }
 };
-
 
 const getAll = async (req, res) => {
   try {
@@ -80,12 +84,17 @@ const deletePost = async (req, res) => {
 const updatePosts = async (req, res) => {
   try {
     const { title, text, id } = req.body;
-    const post = await Post.findById(id);
+    //console.log({ title, text, id });
 
-    post.title = title;
-    post.text = text;
+    if (!title || !text || !id) {
+      return res.status(400).json({ message: "Title, text and id are required" });
+    }
 
-    await post.save();
+    const post = await Post.findByIdAndUpdate({ _id: id }, {
+      title: title,
+      text:text,
+    },{new:true});
+    
     res.json(post);
   } catch (error) {
     res.json({ message: `Problem with updating of post` });

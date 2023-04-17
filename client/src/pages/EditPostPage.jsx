@@ -9,28 +9,31 @@ export const EditPostPage = () => {
   const [text, setText] = useState('');
   
   const params = useParams();
-
+  
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  
   const fetchPost = useCallback(async () => {
     const { data } = await axios.get(`/posts/${params.id}`)
     setTitle(data.title)
     setText(data.text)
   }, [params.id])
 
-  const submitHandler = () => { 
+  const submitHandler = () => {
     try {
-      const updatedPost = new FormData()
-      updatedPost.append('title', title)
-      updatedPost.append('text', text)
-      updatedPost.append('id', params.id)
-      dispatch(updatePost(updatedPost))
-      navigate('/posts')
-    } catch (error) {
+      const updatedPost = new FormData();
+      updatedPost.append("title", title);
+      updatedPost.append("text", text);
+      updatedPost.append("id", params.id);
       
+      //console.log(title, text, params.id);
+      dispatch(updatePost({ title, text, id: params.id }));
+      navigate("/posts");
+    } catch (error) {
+      console.log(error);
     }
-  }
+  };
+
   const cleanHandler = () => {
     setTitle("");
     setText("");

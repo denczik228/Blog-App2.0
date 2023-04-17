@@ -2,31 +2,31 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "../../../utils/axios";
 
 const initialState = {
-    posts: [],
-    popularPosts: [],
-    loading:false
-}
+  posts: [],
+  popularPosts: [],
+  loading: false
+};
 
 export const createPost = createAsyncThunk('post/createPost',
-    async (params) => {
+  async (params) => {
     try {
-        const { data } = await axios.post('/posts', params)
-        return data
+      const { data } = await axios.post('/posts', params)
+      return data
     } catch (error) {
-        throw new error(error)
+      throw new error(error)
     }
-})
+  });
 
 export const getAllposts = createAsyncThunk('post/getAllPosts',
-    async () => {
+  async () => {
     try {
-        const { data } = await axios.get('/posts')
-        return data
+      const { data } = await axios.get('/posts')
+      return data
     } catch (error) {
-        throw new error(`problem with fetching all posts`)
+      throw new error(`problem with fetching all posts`)
     }
-}
-)
+  }
+);
 
 export const deletePosts = createAsyncThunk('post/deletePosts', async (id) => {
   try {
@@ -37,14 +37,18 @@ export const deletePosts = createAsyncThunk('post/deletePosts', async (id) => {
   }
 })
 
-export const updatePost = createAsyncThunk("post/updatePost", async (updatedPost) => {
-  try {
-    const { data } = await axios.put(`/posts/${updatedPost.id}`, updatedPost);
-    return data;
-  } catch (error) {
-    throw new error(`Problem with updating posts`);
+export const updatePost = createAsyncThunk(
+  "post/updatePost",
+  async ({ title, text, id }) => {
+    try {
+      //console.log({ title, text, id });
+      const { data } = await axios.put(`/posts/${id}`, { title, text, id });
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
   }
-});
+);
 
 export const postSlice = createSlice({
   name: "post",
@@ -68,7 +72,7 @@ export const postSlice = createSlice({
     [getAllposts.fulfilled]: (state, action) => {
       state.loading = false;
       state.posts = action.payload.posts;
-      state.popularposts = action.payload.popularposts;
+      state.popularPosts = action.payload.popularposts;
     },
     [getAllposts.rejected]: (state) => {
       state.loading = false;

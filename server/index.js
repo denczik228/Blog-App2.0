@@ -9,10 +9,10 @@ const commentsRouter = require('./routes/comment');
 
 const app = express();
 app.use(cors());
-app.use(express.json());
 
-// parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: false })); // Для парсинга application/x-www-form-urlencoded
+app.use(bodyParser.json()); // Для парсинга application/json
+
 
 
 // app.get('/', (req, res) => {
